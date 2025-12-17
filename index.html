@@ -1,106 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Internship Logbook (120 Hours)</title>
+<meta charset="UTF-8">
+<title>Internship Logbook (120 Hours)</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-    }
-    .container {
-      max-width: 700px;
-      margin: 30px auto;
-      background: #ffffff;
-      padding: 20px;
-      border-radius: 6px;
-    }
-    h2 {
-      text-align: center;
-    }
-    label {
-      font-weight: bold;
-    }
-    input, textarea, button {
-      width: 100%;
-      padding: 8px;
-      margin: 6px 0 15px;
-    }
-    button {
-      background: #2c7be5;
-      color: #ffffff;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #1a5bb8;
-    }
-    #msg {
-      text-align: center;
-      font-weight: bold;
-    }
-  </style>
+<style>
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #eef1f5;
+}
+
+.container {
+  max-width: 820px;
+  margin: 30px auto;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.08);
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+}
+
+h2 {
+  text-align: center;
+  color: #2c3e50;
+}
+
+h3 {
+  text-align: center;
+  color: #2c3e50;
+}
+
+.sub {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+label {
+  font-weight: 600;
+  display: block;
+  margin-top: 12px;
+}
+
+input, textarea, button {
+  width: 100%;
+  padding: 9px;
+  margin-top: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+button {
+  background: #1f5fbf;
+  color: white;
+  border: none;
+  margin-top: 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #164a96;
+}
+
+.info-box {
+  background: #f4f8ff;
+  border-left: 4px solid #1f5fbf;
+  padding: 10px;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+#msg {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 15px;
+}
+</style>
 </head>
 
 <body>
+
 <div class="container">
+<h1>Department of Sanskrit, Pali & Prakrit<lb/></h1>
+<h2>Faculty of Arts</h2>
+<h3>The Maharaja Sayajirao University of Baroda, Vadodara</h3>
 
-  <h2>Internship Daily Logbook</h2>
-  <p>Total Requirement: <strong>120 Hours</strong></p>
+<h2>Internship Daily Logbook</h2>
+<div class="sub">Minimum Requirement: <strong>120 Hours</strong></div>
 
-  <form id="logForm">
+<form id="logForm">
 
-    <label>Student Name *</label>
-    <input type="text" name="student" required>
+<label>Student Name *</label>
+<input type="text" name="student" required>
 
-    <label>Date *</label>
-    <input type="date" name="date" required>
+<label>Date *</label>
+<input type="date" name="date" required>
 
-    <label>In Time *</label>
-    <input type="time" name="in_time" required>
+<label>In Time *</label>
+<input type="time" name="in_time" required>
 
-    <label>Out Time *</label>
-    <input type="time" name="out_time" required>
+<label>Out Time *</label>
+<input type="time" name="out_time" required>
 
-    <label>Work Description</label>
-    <textarea name="work" rows="4"></textarea>
+<label>Daily Hours (Auto-calculated)</label>
+<input type="text" id="dailyHours" readonly>
 
-    <label>Upload Image (jpg / jpeg / png)</label>
-    <input type="file" name="image" accept="image/*">
+<label>Work Description</label>
+<textarea name="work" rows="4"></textarea>
 
-    <button type="submit">Submit Entry</button>
+<label>Upload Work Image</label>
+<input type="file" name="image" accept="image/*">
 
-  </form>
+<div class="info-box">
+Daily internship hours are calculated automatically.<br>
+Ensure accurate In-Time and Out-Time entries.
+</div>
 
-  <p id="msg"></p>
+<button type="submit">Submit Daily Entry</button>
+
+</form>
+
+<p id="msg"></p>
 
 </div>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbyFj6Mj9rpkVxaa1b1_Iz8kimDuxB3pcBd8D0U1-cGJsZCwZCUpQ0Vxx72NvpBJbuHz/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbxwCFHU9o68dKUZaKthd5psl4majuBEYB1I-xHeYDighqlPu8Dh_uNdw0z3wYTCp8rI/exec";
 const form = document.getElementById("logForm");
 const msg = document.getElementById("msg");
+const dailyHoursField = document.getElementById("dailyHours");
 
+// Calculate daily hours
+function calculateHours() {
+  const inTime = form.in_time.value;
+  const outTime = form.out_time.value;
+
+  if (inTime && outTime) {
+    const start = new Date(`1970-01-01T${inTime}:00`);
+    const end = new Date(`1970-01-01T${outTime}:00`);
+
+    let diff = (end - start) / (1000 * 60 * 60);
+    if (diff < 0) diff = 0;
+
+    dailyHoursField.value = diff.toFixed(2) + " hrs";
+  }
+}
+
+form.in_time.addEventListener("change", calculateHours);
+form.out_time.addEventListener("change", calculateHours);
+
+// Image + Base64 submit
 form.addEventListener("submit", function(e) {
   e.preventDefault();
 
-  const fileInput = form.image.files[0];
+  const file = form.image.files[0];
 
-  if (fileInput) {
+  if (file) {
     const reader = new FileReader();
     reader.onloadend = function() {
       sendData(reader.result);
     };
-    reader.readAsDataURL(fileInput);
+    reader.readAsDataURL(file);
   } else {
     sendData("");
   }
 });
 
-function sendData(imageData) {
+function sendData(imageBase64) {
   const formData = new FormData(form);
-  formData.append("image_base64", imageData);
+  formData.append("image_base64", imageBase64);
+  formData.append("daily_hours", dailyHoursField.value);
 
   fetch(scriptURL, {
     method: "POST",
@@ -111,6 +191,7 @@ function sendData(imageData) {
     msg.innerText = "Entry submitted successfully.";
     msg.style.color = "green";
     form.reset();
+    dailyHoursField.value = "";
   })
   .catch(() => {
     msg.innerText = "Submission failed.";
