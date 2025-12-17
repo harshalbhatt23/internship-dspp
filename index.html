@@ -78,14 +78,29 @@
 </div>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbx5xBYQNDKkxbfxP1vqiwrXrsMJ2dzubc_khq43eh4n_vH0PGOrl2e1AxZQv17JGT0Z/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbyFj6Mj9rpkVxaa1b1_Iz8kimDuxB3pcBd8D0U1-cGJsZCwZCUpQ0Vxx72NvpBJbuHz/exec";
 const form = document.getElementById("logForm");
 const msg = document.getElementById("msg");
 
 form.addEventListener("submit", function(e) {
   e.preventDefault();
 
+  const fileInput = form.image.files[0];
+
+  if (fileInput) {
+    const reader = new FileReader();
+    reader.onloadend = function() {
+      sendData(reader.result);
+    };
+    reader.readAsDataURL(fileInput);
+  } else {
+    sendData("");
+  }
+});
+
+function sendData(imageData) {
   const formData = new FormData(form);
+  formData.append("image_base64", imageData);
 
   fetch(scriptURL, {
     method: "POST",
@@ -98,10 +113,10 @@ form.addEventListener("submit", function(e) {
     form.reset();
   })
   .catch(() => {
-    msg.innerText = "Submission failed. Try again.";
+    msg.innerText = "Submission failed.";
     msg.style.color = "red";
   });
-});
+}
 </script>
 
 </body>
